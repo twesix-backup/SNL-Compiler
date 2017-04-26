@@ -29,9 +29,7 @@ let INCOMMENT = new Symbol('comment state');
 let DOT       = new Symbol('dot state');
 let INRANGE   = new Symbol('array subscript range state');
 let INCHAR    = new Symbol('char symbol state');
-let CHAR      = new Symbol('char state');
-let OTHER     = new Symbol('other state');
-let EXIT      = new Symbol('exit state');
+let CHAR_DONE = new Symbol('char done state');
 
 function* DFA()
 {
@@ -59,6 +57,7 @@ function* DFA()
                 }
                 if(/[+\-*\/();\[\]=<\0\s]/.test(char))
                 {
+                    token += char;
                     state = DONE;
                     break;
                 }
@@ -75,17 +74,24 @@ function* DFA()
                 }
                 if(char === '.')
                 {
+                    token += char;
                     state = DOT;
                     break;
                 }
-                if(state === ',')
+                if(state === '\'')
                 {
+                    token += char;
                     state = INCHAR;
                     break;
                 }
                 else
                 {
-                    state = OTHER;
+                    state = S;
+                    yield
+                        {
+                            type: '出错'
+                        };
+                    token = '';
                     break;
                 }
             }
@@ -106,17 +112,168 @@ function* DFA()
                             token,
                             type: '标识符'
                         };
+                    token = '';
+                    break;
                 }
             }
             break;
-            case DONE:
+            case INNUM :
+            {
+                if(/[0-9]/.test(char))
+                {
+                    token += char;
+                    break;
+                }
+                yield
+                    {
+                        token,
+                        type: '无符号整数'
+                    };
+                state = S;
+                token = '';
+                break;
+            }
+            break;
+            case DONE :
             {
                 yield
                     {
                         token,
                         type: '单分界符'
-                    }
+                    };
+                    state = S;
+                    token = '';
+                    break;
+            }
+            break;
+            case COLON :
+            {
+                if(char === '=')
+                {
+                    token += char;
+                    state = INASSIGN;
+                    break;
+                }
+                else
+                {
+                    yield
+                        {
+                            token,
+                            type: '出错'
+                        };
+                    token = '';
+                    state = S;
+                    break;
+                }
+            }
+            case INASSIGN :
+            {
+                yield
+                    {
+                        token,
+                        type: '双分界符'
+                    };
+                state = S;
+                token = '';
+                break;
+            }
+            case INCOMMENT :
+            {
+                if(char === '}')
+                {
+                    state = S;
+                    token = '';
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            case DOT :
+            {
+                if(char === '.')
+                {
+                    token += char;
+                    state = INRANGE;
+                    break;
+                }
+                else
+                {
+                    state = S;
+                    token = '';
+                    yield
+                        {
+                            type: '程序结束标志'
+                        };
+                    break;
+                }
+            }
+            case INRANGE :
+            {
+                yield
+                    {
+                        type: '数组下标'
+                    };
+                state = S;
+                token = '';
+                break;
+
+            }
+            case INCHAR :
+            {
+                if(/[0-9a-zA-Z]/.test(char))
+                {
+                    token += char;
+                    state = CHAR_DONE;
+                    break;
+                }
+                else
+                {
+                    yield
+                        {
+                            type: '出错'
+                        };
+                    state = S;
+                    token = '';
+                    break;
+                }
+            }
+            case CHAR_DONE :
+            {
+                if(char === '\'')
+                {
+                    yield
+                        {
+                            token,
+                            type: '字符状态'
+                        };
+                    state = S;
+                    token = '';
+                    break;
+                }
+                else
+                {
+                    token += char;
+                    yield
+                        {
+                            token,
+                            type: '出错'
+                        };
+                    state = S;
+                    break;
+                }
+            }
+            default :
+            {
+                state = S;
+                token = '';
+                yield
+                    {
+                        type: '出错'
+                    };
+                break;
             }
         }
-    }while(state !== EXIT);
+    }while(1);
 }
