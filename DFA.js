@@ -1,24 +1,3 @@
-function* number()
-{
-    let state = 0;
-    let num = '';
-
-    do
-    {
-        let char = yield state;
-        if(char >= 0 && char <=10)
-        {
-            state = 1;
-            num += char;
-        }
-        else
-        {
-            state = 2;
-        }
-    }while(state === 1);
-    return num;
-}
-
 let S         = new Symbol('initial state');
 let INID      = new Symbol('identifier state');
 let INNUM     = new Symbol('number state');
@@ -277,3 +256,5 @@ function* DFA()
         }
     }while(1);
 }
+
+module.exports = DFA;
