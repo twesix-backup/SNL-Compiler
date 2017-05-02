@@ -1,21 +1,20 @@
-let S         = new Symbol('initial state');
-let INID      = new Symbol('identifier state');
-let INNUM     = new Symbol('number state');
-let DONE      = new Symbol('finish state');
-let COLON     = new Symbol(': state');
-let INASSIGN  = new Symbol('assigning state');
-let INCOMMENT = new Symbol('comment state');
-let DOT       = new Symbol('dot state');
-let INRANGE   = new Symbol('array subscript range state');
-let INCHAR    = new Symbol('char symbol state');
-let CHAR_DONE = new Symbol('char done state');
-let CHAR_NULL = new Symbol('char null state');
+let S         = Symbol('initial state');
+let INID      = Symbol('identifier state');
+let INNUM     = Symbol('number state');
+let DONE      = Symbol('finish state');
+let COLON     = Symbol(': state');
+let INASSIGN  = Symbol('assigning state');
+let INCOMMENT = Symbol('comment state');
+let DOT       = Symbol('dot state');
+let INRANGE   = Symbol('array subscript range state');
+let INCHAR    = Symbol('char symbol state');
+let CHAR_DONE = Symbol('char done state');
+let CHAR_NULL = Symbol('char null state');
 
-function* DFA()
+let DFA = function* ()
 {
     let state = S;
     let token = '';
-
     do
     {
         let char = yield;
@@ -87,11 +86,13 @@ function* DFA()
                 else
                 {
                     state = S;
-                    yield
+                    yield JSON.stringify
+                    (
                         {
-                            token,
-                            type: '标识符'
-                        };
+                            token: token,
+                            type : '标识符'
+                        }
+                    );
                     token = '';
                     break;
                 }
@@ -106,11 +107,13 @@ function* DFA()
                 }
                 else
                 {
-                    yield
+                    yield JSON.stringify
+                    (
                         {
                             token,
                             type: '无符号整数'
-                        };
+                        }
+                    );
                     state = S;
                     token = '';
                     break;
@@ -119,14 +122,16 @@ function* DFA()
             break;
             case DONE :
             {
-                yield
+                yield JSON.stringify
+                (
                     {
                         token,
                         type: '单分界符'
-                    };
-                    state = S;
-                    token = '';
-                    break;
+                    }
+                );
+                state = S;
+                token = '';
+                break;
             }
             break;
             case COLON :
@@ -139,11 +144,13 @@ function* DFA()
                 }
                 else
                 {
-                    yield
+                    yield JSON.stringify
+                    (
                         {
                             token,
                             type: '出错'
-                        };
+                        }
+                    );
                     token = '';
                     state = S;
                     break;
@@ -151,11 +158,13 @@ function* DFA()
             }
             case INASSIGN :
             {
-                yield
+                yield JSON.stringify
+                (
                     {
                         token,
                         type: '双分界符'
-                    };
+                    }
+                );
                 state = S;
                 token = '';
                 break;
@@ -185,19 +194,23 @@ function* DFA()
                 {
                     state = S;
                     token = '';
-                    yield
+                    yield JSON.stringify
+                    (
                         {
                             type: '程序结束标志'
-                        };
+                        }
+                    );
                     break;
                 }
             }
             case INRANGE :
             {
-                yield
+                yield JSON.stringify
+                (
                     {
                         type: '数组下标'
-                    };
+                    }
+                );
                 state = S;
                 token = '';
                 break;
@@ -213,10 +226,12 @@ function* DFA()
                 }
                 else
                 {
-                    yield
+                    yield JSON.stringify
+                    (
                         {
                             type: '出错'
-                        };
+                        }
+                    );
                     state = S;
                     token = '';
                     break;
@@ -233,22 +248,26 @@ function* DFA()
                 else
                 {
                     token += char;
-                    yield
+                    yield JSON.stringify
+                    (
                         {
                             token,
                             type: '出错'
-                        };
+                        }
+                    );
                     state = S;
                     break;
                 }
             }
             case CHAR_NULL :
             {
-                yield
+                yield JSON.stringify
+                (
                     {
                         token,
-                        type: '字符状态'
-                    };
+                        type: '出错'
+                    }
+                );
                 state = S;
                 token = '';
                 break;
@@ -257,14 +276,16 @@ function* DFA()
             {
                 state = S;
                 token = '';
-                yield
+                yield JSON.stringify
+                (
                     {
                         type: '出错'
-                    };
+                    }
+                );
                 break;
             }
         }
     }while(1);
-}
+};
 
 module.exports = DFA;
