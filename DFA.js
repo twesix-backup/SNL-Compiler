@@ -9,6 +9,7 @@ let DOT       = new Symbol('dot state');
 let INRANGE   = new Symbol('array subscript range state');
 let INCHAR    = new Symbol('char symbol state');
 let CHAR_DONE = new Symbol('char done state');
+let CHAR_NULL = new Symbol('char null state');
 
 function* DFA()
 {
@@ -103,14 +104,17 @@ function* DFA()
                     token += char;
                     break;
                 }
-                yield
-                    {
-                        token,
-                        type: '无符号整数'
-                    };
-                state = S;
-                token = '';
-                break;
+                else
+                {
+                    yield
+                        {
+                            token,
+                            type: '无符号整数'
+                        };
+                    state = S;
+                    token = '';
+                    break;
+                }
             }
             break;
             case DONE :
@@ -222,13 +226,8 @@ function* DFA()
             {
                 if(char === '\'')
                 {
-                    yield
-                        {
-                            token,
-                            type: '字符状态'
-                        };
-                    state = S;
-                    token = '';
+                    token += char;
+                    state = CHAR_NULL;
                     break;
                 }
                 else
@@ -242,6 +241,17 @@ function* DFA()
                     state = S;
                     break;
                 }
+            }
+            case CHAR_NULL :
+            {
+                yield
+                    {
+                        token,
+                        type: '字符状态'
+                    };
+                state = S;
+                token = '';
+                break;
             }
             default :
             {
