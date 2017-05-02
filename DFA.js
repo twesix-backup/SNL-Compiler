@@ -18,11 +18,14 @@ let DFA = function* ()
     do
     {
         let char = yield;
+        // console.log(`current char : ${char}`);
+        // console.log(state);
+        // console.log(`current token : ${token}`);
         switch(state)
         {
             case S :
             {
-                if(/[a-zA-z]/.test(char))
+                if(/[a-zA-Z]/.test(char))
                 {
                     token += char;
                     state = INID;
@@ -75,6 +78,20 @@ let DFA = function* ()
                 }
             }
             break;
+            case DONE :
+            {
+                yield JSON.stringify
+                (
+                    {
+                        token,
+                        type: '单分界符'
+                    }
+                );
+                state = S;
+                token = '';
+                break;
+            }
+                break;
             case INID :
             {
                 if(/[0-9a-zA-Z]/.test(char))
@@ -85,7 +102,6 @@ let DFA = function* ()
                 }
                 else
                 {
-                    state = S;
                     yield JSON.stringify
                     (
                         {
@@ -94,6 +110,7 @@ let DFA = function* ()
                         }
                     );
                     token = '';
+                    state = S;
                     break;
                 }
             }
@@ -118,20 +135,6 @@ let DFA = function* ()
                     token = '';
                     break;
                 }
-            }
-            break;
-            case DONE :
-            {
-                yield JSON.stringify
-                (
-                    {
-                        token,
-                        type: '单分界符'
-                    }
-                );
-                state = S;
-                token = '';
-                break;
             }
             break;
             case COLON :
