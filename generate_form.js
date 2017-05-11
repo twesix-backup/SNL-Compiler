@@ -8,7 +8,7 @@ module.exports =
 
         TypeDecpart: 'ε | TypeDec',
         TypeDec: 'TYPE TypeDecList',
-        TypeDecList: 'TypeId = TypeDef; TypeDecMore',
+        TypeDecList: 'TypeId = TypeDef;TypeDecMore',
         TypeDecMore: 'ε | TypeDecList',
         TypeId: 'ID',
 
@@ -19,16 +19,17 @@ module.exports =
         Low: 'INTC',
         Top: 'INTC',
         RecType: 'RECORD FieldDecList END',
-        FieldDecList: 'BaseType IdList;FieldDecMore | ArrayType IdList; FieldDecMore',
+        FieldDecList: 'BaseType IdList; FieldDecMore | ArrayType IdList; FieldDecMore',
         FieldDecMore: 'ε | FieldDecList',
         IdList: 'ID IdMore',
-        IdMore: 'ε |,IdList',
+        IdMore: 'ε | , IdList',
 
         VarDecpart: 'ε | VarDec',
         VarDec: 'VAR VarDecList',
+        VarDecList: 'TypeDef VarIdList; VarDecMore',
         VarDecMore: 'ε | VarDecList',
         VarIdList: 'ID VarIdMore',
-        VarIdMore: 'ε |,VarIdList',
+        VarIdMore: 'ε | , VarIdList',
 
         ProcDecpart: 'ε | ProcDec',
         ProcDec: 'PROCEDURE ProName(ParamList) ; ProcDecPart ProcBody ProcDecMore',
@@ -37,7 +38,64 @@ module.exports =
 
         ParamList: 'ε | ParamDecList',
         ParamDecList: 'Param ParamMore',
-        ParamMore: 'ε |;ParamDecList',
+        ParamMore: 'ε | ; ParamDecList',
         Param: 'TypeDef FormList | VAR TypeDef FormList',
-        FormList: 'ID FidMore'
+        FormList: 'ID FidMore',
+
+        FidMore: 'ε | , FormList',
+
+        ProcDecPart: 'DeclarePart',
+
+        ProcBody: 'ProgramBody',
+
+        ProgramBody: 'BEGIN StmList END',
+
+        StmList: 'Stm StmMore',
+        StmMore: 'ε| ; StmList',
+
+        Stm: 'ConditionalStm | LoopStm | InputStm | OutputStm | ReturnStm | ID AssCall',
+
+        AssCall: 'AssignmentRest | CallStmRest',
+
+        AssignmentRest: 'VariMore := Exp',
+
+        ConditionalStm: 'IF RelExp THEN StmList ELSE StmList FI',
+
+        LoopStm: 'WHILE RelExp DO StmList ENDWH',
+
+        InputStm: 'READ(Invar)',
+
+        Invar: 'ID',
+
+        OutputStm: 'WRITE(Exp)',
+
+        ReturnStm: 'RETURN',
+
+        CallStmRest: '(ActParamList)',
+
+        ActParamList: 'ε | Exp ActParamMore',
+
+        ActParamMore: 'ε | ,ActParamList',
+
+        RelExp: 'Exp OtherRelE',
+        OtherRelE: 'CmpOp Exp',
+
+        Exp: 'Term OtherTerm',
+        OtherTerm: 'ε | AddOp Exp',
+
+        Term: 'Factor OtherFactor',
+        OtherFactor: 'ε | MultOp Term',
+
+        Factor: '(Exp) | INTC | Variable',
+        Variable: 'ID VariMore',
+        VariMore: 'ε | [ Exp ] | . FieldVar',
+
+        FieldVar: 'ID FieldVarMore',
+        FieldVarMore: 'ε | [ Exp ]',
+
+        CmpOp: '< | =',
+        AddOp: '+ | -',
+        MultOp: '* | /'
+
+
     };
