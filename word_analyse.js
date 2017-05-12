@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = function(source_code)
 {
     let DFA = require('./DFA')();
-    let rows = source_code.split(path.sep);
+    let rows = source_code.split(/[\r\n]+/);
     let row_number = 1;
     let result = [];
 
@@ -13,6 +13,7 @@ module.exports = function(source_code)
     while(row)
     {
         row = row.split('');
+        row.push(' ');
         let char = row.shift();
         while(char)
         {
@@ -27,16 +28,23 @@ module.exports = function(source_code)
                 output = JSON.parse(output.value);
                 if(output.type === '出错')
                 {
-                    console.error(`Error : ${output.value.token}`);
+                    console.error(`Error : ${output.value.token} at line ${row}`);
                     return false;
                 }
                 else
                 {
                     DFA.next();
-                    result.push(output);
-                    if(output.type === '标识符')
+                    if(output.token === ' ')
                     {
+
+                    }
+                    else
+                    {
+                        output = build_token(output);
+                        output.row = row_number;
                         console.log(output);
+
+                        // result.push(output);
                     }
                 }
             }
@@ -75,10 +83,62 @@ function build_token(info)
     {
         case '标识符':
         {
-            if(reserved_words.indexOf(info.token.toLowerCase()) === -1)
+            let index = reserved_words.indexOf(info.token.toLowerCase());
+            if( index === -1 )
             {
-
+                return {
+                    lex: 'ID',
+                    sem: info.token
+                };
             }
+            else
+            {
+                return {
+                    lex: reserved_words[index].toUpperCase(),
+                    sem: info.token
+                };
+            }
+        }
+        case '单分界符':
+        {
+            if(info.token === ';')
+            {
+                return {
+                    lex: 'SEMI',
+                    sem: null
+                }
+            }
+            if(info.token === '[')
+            {
+                return {
+                    lex: '[',
+                    sem: null
+                }
+            }
+            if(info.token === ']')
+            {
+                return {
+                    lex: ']',
+                    sem: null
+                }
+            }
+            else
+            {
+                return {
+
+                }
+            }
+        }
+        case '数组下标':
+        {
+            return {
+                lex: '..',
+                sem: null
+            }
+        }
+        default:
+        {
+            return info;
         }
     }
 }
