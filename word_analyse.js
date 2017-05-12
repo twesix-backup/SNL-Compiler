@@ -6,7 +6,6 @@ module.exports = function(source_code)
     let rows = source_code.split(path.sep);
     let row_number = 1;
     let result = [];
-    result.push([]);
 
     let row = rows.shift();
     DFA.next();
@@ -56,6 +55,18 @@ let reserved_words =
         'integer',
         'array',
         'of',
+        'procedure',
+        'begin',
+        'while',
+        'do',
+        'if',
+        'then',
+        'else',
+        'fi',
+        'endwh',
+        'end',
+        'read',
+        'write',
     ];
 
 function build_token(info)
@@ -64,26 +75,9 @@ function build_token(info)
     {
         case '标识符':
         {
-            switch(info.token.toLowerCase())
+            if(reserved_words.indexOf(info.token.toLowerCase()) === -1)
             {
-                case 'program':
-                {
-                    return {
-                        lex: 'PROGRAM'
-                    };
-                }
-                case 'var':
-                {
-                    return {
-                        lex: 'VAR'
-                    };
-                }
-                case 'integer':
-                {
-                    return {
-                        lex: 'INTEGER'
-                    }
-                }
+
             }
         }
     }
