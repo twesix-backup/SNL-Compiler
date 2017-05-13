@@ -31,6 +31,10 @@ module.exports = function(source_code)
                     console.error(`Error : ${output.value.token} at line ${row}`);
                     return false;
                 }
+                if(output.type === '程序结束标志')
+                {
+                    return result;
+                }
                 else
                 {
                     DFA.next();
@@ -42,9 +46,9 @@ module.exports = function(source_code)
                     {
                         output = build_token(output);
                         output.row = row_number;
-                        console.log(output);
+                        // console.log(output);
 
-                        // result.push(output);
+                        result.push(output);
                     }
                 }
             }
@@ -53,7 +57,8 @@ module.exports = function(source_code)
         row_number ++;
     }
 
-    // console.log(result);
+    console.log(result);
+    return result;
 };
 
 let reserved_words =
@@ -106,27 +111,81 @@ function build_token(info)
                 return {
                     lex: 'SEMI',
                     sem: null
-                }
+                };
             }
             if(info.token === '[')
             {
                 return {
                     lex: '[',
                     sem: null
-                }
+                };
             }
             if(info.token === ']')
             {
                 return {
                     lex: ']',
                     sem: null
-                }
+                };
+            }
+            if(info.token === '(')
+            {
+                return {
+                    lex: '(',
+                    sem: null
+                };
+            }
+            if(info.token === ')')
+            {
+                return {
+                    lex: ')',
+                    sem: null
+                };
+            }
+            if(info.token === '+')
+            {
+                return {
+                    lex: '+',
+                    sem: null
+                };
+            }
+            if(info.token === '-')
+            {
+                return {
+                    lex: '-',
+                    sem: null
+                };
+            }
+            if(info.token === '*')
+            {
+                return {
+                    lex: '*',
+                    sem: null
+                };
+            }
+            if(info.token === '/')
+            {
+                return {
+                    lex: '/',
+                    sem: null
+                };
+            }
+            if(info.token === '=')
+            {
+                return {
+                    lex: '=',
+                    sem: null
+                };
+            }
+            if(info.token === '<')
+            {
+                return {
+                    lex: '<',
+                    sem: null
+                };
             }
             else
             {
-                return {
-
-                }
+                return info;
             }
         }
         case '数组下标':
@@ -134,6 +193,27 @@ function build_token(info)
             return {
                 lex: '..',
                 sem: null
+            };
+        }
+        case '无符号整数':
+        {
+            return {
+                lex: 'INTC',
+                sem: info.token
+            };
+        }
+        case '双分界符':
+        {
+            if(info.token === ':=')
+            {
+                return {
+                    lex: ':=',
+                    sem: null
+                };
+            }
+            else
+            {
+                return info;
             }
         }
         default:
