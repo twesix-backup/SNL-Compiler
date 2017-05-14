@@ -1,0 +1,7 @@
+{
+  "name": "SNL-Compiler",
+  "version": "0.0.1",
+  "dependencies": {
+    "xlsx": "^0.10.1"
+  }
+}

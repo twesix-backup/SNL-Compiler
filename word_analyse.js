@@ -33,6 +33,13 @@ module.exports = function(source_code)
                 }
                 if(output.type === '程序结束标志')
                 {
+                    // let end =
+                    //     {
+                    //         lex: '#',
+                    //         sem: null,
+                    //         row: row_number
+                    //     };
+                    // result.push(end);
                     return result;
                 }
                 else

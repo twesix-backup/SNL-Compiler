@@ -1,4 +1,4 @@
-module.exports =
+const forms =
     {
         Program: 'ProgramHead DeclarePart ProgramBody',
         ProgramHead: 'PROGRAM ProgramName',
@@ -15,7 +15,7 @@ module.exports =
         TypeDef: 'BaseType | StructureType | ID',
         BaseType: 'INTEGER | CHAR',
         StructureType: 'ArrayType | RecType',
-        ArrayType: 'Array [low..top] OF BaseType',
+        ArrayType: 'Array [Low..Top] OF BaseType',
         Low: 'INTC',
         Top: 'INTC',
         RecType: 'RECORD FieldDecList END',
@@ -96,6 +96,23 @@ module.exports =
         CmpOp: '< | =',
         AddOp: '+ | -',
         MultOp: '* | /'
-
-
     };
+
+const result = [];
+for ( let key in forms)
+{
+    const right_items = forms[key].split('|');
+    right_items.forEach(function(e)
+    {
+        let form =
+            {
+                left: key,
+                right: e.trim()
+            };
+        // console.log(form);
+        result.push(form);
+    });
+}
+
+module.exports = result;
+// console.log(result.length);
