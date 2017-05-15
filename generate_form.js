@@ -33,7 +33,7 @@ const forms =
 
         ProcDecpart: 'ε | ProcDec',
         ProcDec: 'PROCEDURE ProName(ParamList) ; ProcDecPart ProcBody ProcDecMore',
-        ProcDecMore: 'ε | ProcDeclaration',
+        ProcDecMore: 'ε | ProcDec',
         ProcName: 'ID',
 
         ParamList: 'ε | ParamDecList',
