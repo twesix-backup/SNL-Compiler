@@ -8,31 +8,31 @@ const forms =
 
         TypeDecpart: 'ε | TypeDec',
         TypeDec: 'TYPE TypeDecList',
-        TypeDecList: 'TypeId = TypeDef;TypeDecMore',
+        TypeDecList: 'TypeId = TypeDef ; TypeDecMore',
         TypeDecMore: 'ε | TypeDecList',
         TypeId: 'ID',
 
         TypeDef: 'BaseType | StructureType | ID',
         BaseType: 'INTEGER | CHAR',
         StructureType: 'ArrayType | RecType',
-        ArrayType: 'Array [Low..Top] OF BaseType',
+        ArrayType: 'ARRAY [ Low .. Top ] OF BaseType',
         Low: 'INTC',
         Top: 'INTC',
         RecType: 'RECORD FieldDecList END',
-        FieldDecList: 'BaseType IdList; FieldDecMore | ArrayType IdList; FieldDecMore',
+        FieldDecList: 'BaseType IdList ; FieldDecMore | ArrayType IdList ; FieldDecMore',
         FieldDecMore: 'ε | FieldDecList',
         IdList: 'ID IdMore',
         IdMore: 'ε | , IdList',
 
         VarDecpart: 'ε | VarDec',
         VarDec: 'VAR VarDecList',
-        VarDecList: 'TypeDef VarIdList; VarDecMore',
+        VarDecList: 'TypeDef VarIdList ; VarDecMore',
         VarDecMore: 'ε | VarDecList',
         VarIdList: 'ID VarIdMore',
         VarIdMore: 'ε | , VarIdList',
 
         ProcDecpart: 'ε | ProcDec',
-        ProcDec: 'PROCEDURE ProName(ParamList) ; ProcDecPart ProcBody ProcDecMore',
+        ProcDec: 'PROCEDURE ProcName ( ParamList ) ; ProcDecPart ProcBody ProcDecMore',
         ProcDecMore: 'ε | ProcDec',
         ProcName: 'ID',
 
@@ -51,7 +51,7 @@ const forms =
         ProgramBody: 'BEGIN StmList END',
 
         StmList: 'Stm StmMore',
-        StmMore: 'ε| ; StmList',
+        StmMore: 'ε | ; StmList',
 
         Stm: 'ConditionalStm | LoopStm | InputStm | OutputStm | ReturnStm | ID AssCall',
 
@@ -63,15 +63,15 @@ const forms =
 
         LoopStm: 'WHILE RelExp DO StmList ENDWH',
 
-        InputStm: 'READ(Invar)',
+        InputStm: 'READ ( Invar ) ',
 
         Invar: 'ID',
 
-        OutputStm: 'WRITE(Exp)',
+        OutputStm: 'WRITE ( Exp ) ',
 
         ReturnStm: 'RETURN',
 
-        CallStmRest: '(ActParamList)',
+        CallStmRest: '( ActParamList )',
 
         ActParamList: 'ε | Exp ActParamMore',
 
@@ -86,7 +86,7 @@ const forms =
         Term: 'Factor OtherFactor',
         OtherFactor: 'ε | MultOp Term',
 
-        Factor: '(Exp) | INTC | Variable',
+        Factor: '( Exp ) | INTC | Variable',
         Variable: 'ID VariMore',
         VariMore: 'ε | [ Exp ] | . FieldVar',
 

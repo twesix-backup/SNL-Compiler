@@ -37,7 +37,7 @@ let DFA = function* ()
                     state = INNUM;
                     break;
                 }
-                if(/[+\-*\/();\[\]=<\0\s]/.test(char))
+                if(/[+\-*\/();\[\]=<\0\s,]/.test(char))
                 {
                     token += char;
                     state = DONE;

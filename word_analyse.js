@@ -87,6 +87,7 @@ let reserved_words =
         'end',
         'read',
         'write',
+        'type',
     ];
 
 function build_token(info)
@@ -116,7 +117,7 @@ function build_token(info)
             if(info.token === ';')
             {
                 return {
-                    lex: 'SEMI',
+                    lex: ';',
                     sem: null
                 };
             }
@@ -187,6 +188,13 @@ function build_token(info)
             {
                 return {
                     lex: '<',
+                    sem: null
+                };
+            }
+            if(info.token === ',')
+            {
+                return {
+                    lex: ',',
                     sem: null
                 };
             }
